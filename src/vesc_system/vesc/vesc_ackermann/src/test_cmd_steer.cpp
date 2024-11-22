@@ -7,7 +7,7 @@ int main(int argc, char** argv) {
     ros::NodeHandle nh;
 
     // Publisher to the ackermann_cmd topic
-    ros::Publisher ackermann_cmd_pub = nh.advertise<ackermann_msgs::AckermannDriveStamped>("ackermann_cmd", 10);
+    const ros::Publisher ackermann_cmd_pub = nh.advertise<ackermann_msgs::AckermannDriveStamped>("ackermann_cmd", 10);
 
     // Set the loop rate for publishing messages
     ros::Rate loop_rate(2); // 2 Hz for a steady test signal
@@ -33,7 +33,7 @@ int main(int argc, char** argv) {
 
         // Check if 10 seconds have passed to switch directions
         auto now = std::chrono::steady_clock::now();
-        auto elapsed_seconds = std::chrono::duration_cast<std::chrono::seconds>(now - start_time).count();
+        const auto elapsed_seconds = std::chrono::duration_cast<std::chrono::seconds>(now - start_time).count();
         if (elapsed_seconds >= 2) {
             // Reverse the speed and steering angle
             speed = -speed;

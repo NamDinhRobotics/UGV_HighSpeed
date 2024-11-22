@@ -14,9 +14,9 @@ int main(int argc, char** argv) {
     ros::Publisher ackermann_cmd_pub = nh.advertise<ackermann_msgs::AckermannDriveStamped>("ackermann_cmd", 10);
 
     // Define parameters for forward and backward motion
-    const double speed = 0.25;  // Set to a moderate speed for controlled movement
-    const double travel_time = 2.5;  // Approximate time to travel 0.5 meters at this speed
-    const double stop_duration = 3.0;  // Stop duration in seconds
+    constexpr double speed = 0.25;  // Set to a moderate speed for controlled movement
+    constexpr double travel_time = 2.5;  // Approximate time to travel 0.5 meters at this speed
+    constexpr double stop_duration = 3.0;  // Stop duration in seconds
 
     ackermann_msgs::AckermannDriveStamped drive_msg;
 
@@ -29,7 +29,7 @@ int main(int argc, char** argv) {
     ROS_INFO("Moving forward for 0.5 meters...");
     while (ros::ok() && (ros::Time::now() - start_time).toSec() < travel_time) {
         ackermann_cmd_pub.publish(drive_msg);
-        ros::Duration(0.1).sleep();  // Small sleep to control publish rate
+        return ros::Duration(0.1).sleep();  // Small sleep to control publish rate
     }
 
     // Step 2: Stop for 3 seconds
@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
     start_time = ros::Time::now();
     while (ros::ok() && (ros::Time::now() - start_time).toSec() < stop_duration) {
         ackermann_cmd_pub.publish(drive_msg);
-        ros::Duration(0.1).sleep();  // Maintain stop command
+        return ros::Duration(0.1).sleep();  // Maintain stop command
     }
 
     // Step 3: Move backward for 0.5 meters
@@ -47,7 +47,7 @@ int main(int argc, char** argv) {
     start_time = ros::Time::now();
     while (ros::ok() && (ros::Time::now() - start_time).toSec() < travel_time) {
         ackermann_cmd_pub.publish(drive_msg);
-        ros::Duration(0.1).sleep();  // Small sleep to control publish rate
+        return ros::Duration(0.1).sleep();  // Small sleep to control publish rate
     }
 
     // Step 4: Stop after backward motion

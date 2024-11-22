@@ -65,8 +65,8 @@ public:
   virtual const std::string& name() const {return name_;}
 
 protected:
-  VescPacket(const std::string& name, int payload_size, int payload_id);
-  VescPacket(const std::string& name, boost::shared_ptr<VescFrame> raw);
+  VescPacket(std::string  name, int payload_size, int payload_id);
+  VescPacket(std::string  name, const boost::shared_ptr<VescFrame>& raw);
 
 private:
   std::string name_;
@@ -80,7 +80,7 @@ typedef boost::shared_ptr<VescPacket const> VescPacketConstPtr;
 class VescPacketFWVersion : public VescPacket
 {
 public:
-  VescPacketFWVersion(boost::shared_ptr<VescFrame> raw);
+  VescPacketFWVersion(const boost::shared_ptr<VescFrame>& raw);
 
   int fwMajor() const;
   int fwMinor() const;
@@ -99,24 +99,24 @@ public:
 class VescPacketValues : public VescPacket
 {
 public:
-  VescPacketValues(boost::shared_ptr<VescFrame> raw);
+  VescPacketValues(const boost::shared_ptr<VescFrame>& raw);
 
-  double v_in() const;
+  static double v_in() ;
   double temp_mos1() const;
   double temp_mos2() const;
   double temp_mos3() const;
   double temp_mos4() const;
   double temp_mos5() const;
   double temp_mos6() const;
-  double temp_pcb() const;
+  static double temp_pcb() ;
   double current_motor() const;
   double current_in() const;
   double rpm() const;
   double duty_now() const;
   double amp_hours() const;
   double amp_hours_charged() const;
-  double watt_hours() const;
-  double watt_hours_charged() const;
+  static double watt_hours() ;
+  static double watt_hours_charged() ;
   double tachometer() const;
   double tachometer_abs() const;
   int fault_code() const;

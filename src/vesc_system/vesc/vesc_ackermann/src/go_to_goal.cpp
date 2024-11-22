@@ -99,10 +99,10 @@ private:
     ros::Subscriber odom_sub_;
     ros::Publisher ackermann_pub_;
 
-    double goal_x_, goal_y_;
-    double current_x_, current_y_, current_yaw_;
-    double goal_tolerance_;
-    double max_speed_, min_speed_, max_steering_angle_;
+    double goal_x_{}, goal_y_{};
+    double current_x_{}, current_y_{}, current_yaw_{};
+    double goal_tolerance_{};
+    double max_speed_{}, min_speed_{}, max_steering_angle_{};
     bool goal_received_, odom_received_;
 
     void goalCallback(const geometry_msgs::PoseStamped::ConstPtr& msg) {

@@ -13,13 +13,13 @@ class AckermannToVesc
 {
 public:
 
-  AckermannToVesc(ros::NodeHandle nh, ros::NodeHandle private_nh);
+  AckermannToVesc(ros::NodeHandle nh, const ros::NodeHandle& private_nh);
 
 private:
   // ROS parameters
   // conversion gain and offset
-  double speed_to_erpm_gain_, speed_to_erpm_offset_;
-  double steering_to_servo_gain_, steering_to_servo_offset_;
+  double speed_to_erpm_gain_{}, speed_to_erpm_offset_{};
+  double steering_to_servo_gain_{}, steering_to_servo_offset_{};
 
   /** @todo consider also providing an interpolated look-up table conversion */
 
@@ -29,7 +29,7 @@ private:
   ros::Subscriber ackermann_sub_;
 
   // ROS callbacks
-  void ackermannCmdCallback(const ackermann_msgs::AckermannDriveStamped::ConstPtr& cmd);
+  void ackermannCmdCallback(const ackermann_msgs::AckermannDriveStamped::ConstPtr& cmd) const;
 };
 
 } // namespace vesc_ackermann

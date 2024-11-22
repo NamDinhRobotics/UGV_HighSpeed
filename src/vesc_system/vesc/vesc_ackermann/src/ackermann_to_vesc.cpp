@@ -13,7 +13,7 @@ namespace vesc_ackermann
 template <typename T>
 inline bool getRequiredParam(const ros::NodeHandle& nh, std::string name, T& value);
 
-AckermannToVesc::AckermannToVesc(ros::NodeHandle nh, ros::NodeHandle private_nh)
+AckermannToVesc::AckermannToVesc(ros::NodeHandle nh, const ros::NodeHandle& private_nh)
 {
   // get conversion parameters
   if (!getRequiredParam(nh, "speed_to_erpm_gain", speed_to_erpm_gain_))
@@ -34,8 +34,7 @@ AckermannToVesc::AckermannToVesc(ros::NodeHandle nh, ros::NodeHandle private_nh)
 }
 
 typedef ackermann_msgs::AckermannDriveStamped::ConstPtr AckermannMsgPtr;
-void AckermannToVesc::ackermannCmdCallback(const AckermannMsgPtr& cmd)
-{
+void AckermannToVesc::ackermannCmdCallback(const AckermannMsgPtr& cmd) const {
   // calc vesc electric RPM (speed)
   std_msgs::Float64::Ptr erpm_msg(new std_msgs::Float64);
   erpm_msg->data = speed_to_erpm_gain_ * cmd->drive.speed + speed_to_erpm_offset_;

@@ -53,7 +53,7 @@ public:
   typedef boost::function<VescPacketPtr(boost::shared_ptr<VescFrame>)> CreateFn;
 
   /** Register a packet type with the factory. */
-  static void registerPacketType(int payload_id, CreateFn fn);
+  static void registerPacketType(int payload_id, const CreateFn &fn);
 
 private:
 

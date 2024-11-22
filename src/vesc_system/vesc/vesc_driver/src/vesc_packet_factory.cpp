@@ -21,7 +21,7 @@ VescPacketFactory::FactoryMap* VescPacketFactory::getMap()
   return &m;
 }
 
-void VescPacketFactory::registerPacketType(int payload_id, CreateFn fn)
+void VescPacketFactory::registerPacketType(const int payload_id, const CreateFn &fn)
 {
   FactoryMap* p_map(getMap());
   assert(0 == p_map->count(payload_id));
@@ -30,10 +30,10 @@ void VescPacketFactory::registerPacketType(int payload_id, CreateFn fn)
 
 /** Helper function for when createPacket can not create a packet */
 VescPacketPtr createFailed(int* p_num_bytes_needed, std::string* p_what,
-                           const std::string& what, int num_bytes_needed = 0)
+                           const std::string& what, const int num_bytes_needed = 0)
 {
-  if (p_num_bytes_needed != NULL) *p_num_bytes_needed = num_bytes_needed;
-  if (p_what != NULL) *p_what = what;
+  if (p_num_bytes_needed != nullptr) *p_num_bytes_needed = num_bytes_needed;
+  if (p_what != nullptr) *p_what = what;
   return VescPacketPtr();
 }
 
@@ -42,11 +42,11 @@ VescPacketPtr VescPacketFactory::createPacket(const Buffer::const_iterator& begi
                                               int* num_bytes_needed, std::string* what)
 {
   // initialize output variables
-  if (num_bytes_needed != NULL) *num_bytes_needed = 0;
-  if (what != NULL) what->clear();
+  if (num_bytes_needed != nullptr) *num_bytes_needed = 0;
+  if (what != nullptr) what->clear();
 
   // need at least VESC_MIN_FRAME_SIZE bytes in buffer
-  int buffer_size(std::distance(begin, end));
+  const int buffer_size(std::distance(begin, end));
   if (buffer_size < VescFrame::VESC_MIN_FRAME_SIZE)
     return createFailed(num_bytes_needed, what, "Buffer does not contain a complete frame",
                         VescFrame::VESC_MIN_FRAME_SIZE - buffer_size);
@@ -75,12 +75,12 @@ VescPacketPtr VescPacketFactory::createPacket(const Buffer::const_iterator& begi
     return createFailed(num_bytes_needed, what, "Invalid payload length");
 
   // get iterators to crc field, end-of-frame field, and a view of the whole frame
-  Buffer::const_iterator iter_crc(view_payload.second);
-  Buffer::const_iterator iter_eof(iter_crc + 2);
-  BufferRangeConst view_frame(begin, iter_eof + 1);
+  const auto iter_crc(view_payload.second);
+  const auto iter_eof(iter_crc + 2);
+  const BufferRangeConst view_frame(begin, iter_eof + 1);
 
   // do we have enough data in the buffer to complete the frame?
-  int frame_size = boost::distance(view_frame);
+  const int frame_size = boost::distance(view_frame);
   if (buffer_size < frame_size)
     return createFailed(num_bytes_needed, what, "Buffer does not contain a complete frame",
                         frame_size - buffer_size);
@@ -90,27 +90,27 @@ VescPacketPtr VescPacketFactory::createPacket(const Buffer::const_iterator& begi
     return createFailed(num_bytes_needed, what, "Invalid end-of-frame character");
 
   // is the crc valid?
-  unsigned short crc = (static_cast<unsigned short>(*iter_crc) << 8) + *(iter_crc + 1);
+  const unsigned short crc = (static_cast<unsigned short>(*iter_crc) << 8) + *(iter_crc + 1);
   VescFrame::CRC crc_calc;
   crc_calc.process_bytes(&(*view_payload.first), boost::distance(view_payload));
   if (crc != crc_calc.checksum())
     return createFailed(num_bytes_needed, what, "Invalid checksum");
 
   // frame looks good, construct the raw frame
-  boost::shared_ptr<VescFrame> raw_frame(new VescFrame(view_frame, view_payload));
+  const boost::shared_ptr<VescFrame> raw_frame(new VescFrame(view_frame, view_payload));
 
   // if the packet has a payload, construct the corresponding subclass
   if (boost::distance(view_payload) > 0) {
 
     // get constructor function from payload id
     FactoryMap* p_map(getMap());
-    FactoryMap::const_iterator search(p_map->find(*view_payload.first));
+    const FactoryMap::const_iterator search(p_map->find(*view_payload.first));
     if (search != p_map->end()) {
       return search->second(raw_frame);
     }
     else {
       // no subclass constructor for this packet
-      return createFailed(num_bytes_needed, what, "Unkown payload type.");
+      return createFailed(num_bytes_needed, what, "Unknown payload type.");
     }
 
   }

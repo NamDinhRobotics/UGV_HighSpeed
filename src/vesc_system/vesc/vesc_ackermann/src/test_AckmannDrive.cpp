@@ -35,7 +35,7 @@ int main(int argc, char** argv) {
         // Check if we need to start or continue holding the speed and steering angle
         if (holding) {
             auto now = std::chrono::steady_clock::now();
-            auto elapsed_seconds = std::chrono::duration_cast<std::chrono::seconds>(now - hold_start_time).count();
+            const auto elapsed_seconds = std::chrono::duration_cast<std::chrono::seconds>(now - hold_start_time).count();
 
             // Continue holding until 30 seconds have passed
             if (elapsed_seconds >= 2) {
