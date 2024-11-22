@@ -29,7 +29,7 @@ int main(int argc, char** argv) {
     ROS_INFO("Moving forward for 0.5 meters...");
     while (ros::ok() && (ros::Time::now() - start_time).toSec() < travel_time) {
         ackermann_cmd_pub.publish(drive_msg);
-        return ros::Duration(0.1).sleep();  // Small sleep to control publish rate
+        ros::Duration(0.1).sleep();  // Small sleep to control publish rate
     }
 
     // Step 2: Stop for 3 seconds
@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
     start_time = ros::Time::now();
     while (ros::ok() && (ros::Time::now() - start_time).toSec() < stop_duration) {
         ackermann_cmd_pub.publish(drive_msg);
-        return ros::Duration(0.1).sleep();  // Maintain stop command
+        ros::Duration(0.1).sleep();  // Maintain stop command
     }
 
     // Step 3: Move backward for 0.5 meters
@@ -47,7 +47,7 @@ int main(int argc, char** argv) {
     start_time = ros::Time::now();
     while (ros::ok() && (ros::Time::now() - start_time).toSec() < travel_time) {
         ackermann_cmd_pub.publish(drive_msg);
-        return ros::Duration(0.1).sleep();  // Small sleep to control publish rate
+        ros::Duration(0.1).sleep();  // Small sleep to control publish rate
     }
 
     // Step 4: Stop after backward motion
